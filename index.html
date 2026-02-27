@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Justice Research Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --walnut:     #2c1810;
+    --walnut-mid: #3d2418;
+    --clay:       #9e3d26;
+    --parchment:  #f5ede0;
+    --linen:      #ede4d4;
+    --oak:        #c8aa82;
+    --border:     #d8ccba;
+    --ink:        #1e140a;
+    --mid:        #6b5848;
+    --soft:       #9a8a78;
+    --card:       #faf6ef;
+    --success:    #3a5c30;
+  }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--parchment);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: var(--walnut);
+    color: var(--card);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: var(--clay);
+    opacity: 0.22;
+  }
+  .site-header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 10%;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: var(--oak);
+    opacity: 0.10;
+  }
+  .header-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .header-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--oak);
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+  .header-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 0.9rem;
+  }
+  .header-subtitle {
+    font-size: 1rem;
+    color: rgba(250,246,239,0.72);
+    line-height: 1.6;
+    font-weight: 300;
+    max-width: 540px;
+  }
+
+  /* STEPS NAV */
+  .steps-bar {
+    background: var(--walnut-mid);
+    padding: 0 2rem;
+  }
+  .steps-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+  }
+  .step-tab {
+    padding: 0.85rem 1.4rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: rgba(250,246,239,0.38);
+    border-bottom: 3px solid transparent;
+    cursor: default;
+    transition: all 0.25s;
+    white-space: nowrap;
+  }
+  .step-tab.active { color: var(--oak); border-bottom-color: var(--oak); }
+  .step-tab.done   { color: rgba(250,246,239,0.55); border-bottom-color: rgba(250,246,239,0.18); }
+
+  /* MAIN */
+  .main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  /* PANELS */
+  .panel { display: none; animation: fadeIn 0.3s ease; }
+  .panel.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-heading {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    color: var(--walnut);
+  }
+  .panel-intro {
+    font-size: 0.96rem;
+    color: var(--mid);
+    line-height: 1.65;
+    margin-bottom: 1.8rem;
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  /* TOPIC GRID */
+  .topic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  @media (max-width: 520px) { .topic-grid { grid-template-columns: 1fr; } }
+
+  .topic-card {
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--card);
+  }
+  .topic-card:hover {
+    border-color: var(--clay);
+    box-shadow: 0 2px 12px rgba(158,61,38,0.13);
+    transform: translateY(-1px);
+  }
+  .topic-card.selected {
+    border-color: var(--walnut);
+    background: var(--walnut);
+    color: var(--card);
+    box-shadow: 0 4px 18px rgba(44,24,16,0.22);
+  }
+  .topic-card-icon {
+    width: 28px; height: 28px;
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+  }
+  .topic-card.selected .topic-card-icon { opacity: 0.85; filter: brightness(4); }
+  .topic-name  { font-size: 0.92rem; font-weight: 600; line-height: 1.3; margin-bottom: 0.25rem; }
+  .topic-hint  { font-size: 0.78rem; color: var(--soft); font-style: italic; line-height: 1.4; }
+  .topic-card.selected .topic-hint { color: rgba(250,246,239,0.55); }
+
+  /* PRIMER */
+  .primer-card {
+    background: var(--card);
+    border-left: 4px solid var(--clay);
+    border-radius: 0 8px 8px 0;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1.8rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .primer-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--clay);
+    margin-bottom: 0.5rem;
+  }
+  .primer-question {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--walnut);
+    margin-bottom: 0.8rem;
+    line-height: 1.4;
+  }
+  .primer-body {
+    font-size: 0.93rem;
+    color: var(--mid);
+    line-height: 1.7;
+    margin-bottom: 1.1rem;
+  }
+  .keywords-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--mid);
+    margin-bottom: 0.55rem;
+  }
+  .keyword-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
+  .keyword-chip {
+    display: inline-block;
+    background: var(--linen);
+    color: var(--walnut);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.28rem 0.7rem;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    transition: all 0.15s;
+  }
+  .keyword-chip:hover { background: var(--walnut); color: var(--oak); border-color: var(--walnut); cursor: default; }
+
+  .primer-start { font-size: 0.87rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; }
+  .db-links { display: flex; flex-direction: column; gap: 0.5rem; }
+  .db-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.75rem 1rem;
+    background: var(--walnut);
+    color: var(--card);
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.18s;
+  }
+  .db-link:hover { background: var(--walnut-mid); }
+
+  /* MLA hint */
+  .mla-hint {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    font-size: 0.84rem;
+    color: var(--mid);
+    line-height: 1.7;
+  }
+  .mla-hint strong { color: var(--ink); }
+  .mla-example { font-style: italic; color: var(--walnut); margin-top: 0.35rem; font-size: 0.82rem; }
+
+  /* EVAL */
+  .eval-form { display: flex; flex-direction: column; gap: 1.4rem; }
+  .eval-question {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 1.3rem 1.5rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+  }
+  .eval-q-number { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: var(--clay); margin-bottom: 0.35rem; }
+  .eval-q-text   { font-size: 1rem; font-weight: 600; color: var(--walnut); margin-bottom: 0.3rem; line-height: 1.4; }
+  .eval-q-sub    { font-size: 0.84rem; color: var(--soft); font-style: italic; margin-bottom: 0.8rem; line-height: 1.5; }
+  .eval-input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    padding: 0.65rem 0.85rem;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.93rem;
+    color: var(--ink);
+    background: var(--parchment);
+    resize: vertical;
+    min-height: 70px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .eval-input:focus { border-color: var(--walnut); background: var(--card); }
+  .eval-verdict { display: flex; gap: 0.6rem; margin-top: 0.6rem; }
+  .verdict-btn {
+    flex: 1;
+    padding: 0.55rem;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    background: var(--parchment);
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--mid);
+    transition: all 0.15s;
+  }
+  .verdict-btn:hover { border-color: var(--walnut); color: var(--walnut); }
+  .verdict-btn.selected-yes    { background: #eaf3ea; border-color: var(--success); color: var(--success); }
+  .verdict-btn.selected-no     { background: #faecea; border-color: #b03020; color: #b03020; }
+  .verdict-btn.selected-unsure { background: #f5f0e8; border-color: var(--oak); color: #7a5a28; }
+
+  /* SUMMARY */
+  .summary-box {
+    background: var(--walnut);
+    color: var(--card);
+    border-radius: 8px;
+    padding: 1.6rem;
+    margin-top: 2rem;
+  }
+  .summary-label   { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--oak); font-weight: 700; margin-bottom: 0.8rem; }
+  .summary-verdict { font-family: 'Playfair Display', serif; font-size: 1.25rem; margin-bottom: 0.6rem; }
+  .summary-note    { font-size: 0.88rem; color: rgba(250,246,239,0.65); line-height: 1.6; font-style: italic; }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.6rem;
+    border-radius: 5px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--walnut); color: var(--card); }
+  .btn-primary:hover { background: var(--walnut-mid); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(44,24,16,0.22); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-ghost { background: transparent; color: var(--walnut); border: 1.5px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--walnut); }
+  .btn-row { display: flex; gap: 0.75rem; align-items: center; margin-top: 1.8rem; flex-wrap: wrap; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-label">English I &nbsp;&middot;&nbsp; TKAM / Dear Martin Project</div>
+    <h1 class="header-title">Social Justice<br>Research Guide</h1>
+    <p class="header-subtitle">Find a credible source, think carefully about it, and get ready to write.</p>
+  </div>
+</header>
+
+<nav class="steps-bar">
+  <div class="steps-inner">
+    <div class="step-tab active" id="tab-1">1 &ndash; Choose Topic</div>
+    <div class="step-tab" id="tab-2">2 &ndash; Find a Source</div>
+    <div class="step-tab" id="tab-3">3 &ndash; Evaluate It</div>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- PANEL 1: TOPIC CHOOSER -->
+  <div class="panel active" id="panel-1">
+    <h2 class="panel-heading">Choose your topic</h2>
+    <p class="panel-intro">Select the one that interests you most. You will learn about it through real research, not just a quick search.</p>
+
+    <div class="topic-grid">
+
+      <div class="topic-card" data-topic="racial" onclick="selectTopic(this)">
+        <svg class="topic-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="7" r="4"/><path d="M5 20c0-4 3-7 7-7s7 3 7 7"/></svg>
+        <div class="topic-name">Racial Injustice &amp; Discrimination</div>
+        <div class="topic-hint">How race shapes opportunity and treatment</div>
+      </div>
+
+      <div class="topic-card" data-topic="justice" onclick="selectTopic(this)">
+        <svg class="topic-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l1.5 4.5H18l-3.75 2.7 1.5 4.5L12 12l-3.75 2.7 1.5-4.5L6 7.5h4.5z"/><line x1="12" y1="21" x2="12" y2="14"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+        <div class="topic-name">Inequality in the Justice System</div>
+        <div class="topic-hint">Who is treated fairly, and who is not</div>
+      </div>
+
+      <div class="topic-card" data-topic="poverty" onclick="selectTopic(this)">
+        <svg class="topic-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <div class="topic-name">Poverty &amp; Social Class</div>
+        <div class="topic-hint">How economic inequality limits lives</div>
+      </div>
+
+      <div class="topic-card" data-topic="power" onclick="selectTopic(this)">
+        <svg class="topic-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+        <div class="topic-name">Abuse of Power or Authority</div>
+        <div class="topic-hint">When people in charge misuse their position</div>
+      </div>
+
+      <div class="topic-card" data-topic="prejudice" onclick="selectTopic(this)">
+        <svg class="topic-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><line x1="4.22" y1="4.22" x2="19.78" y2="19.78"/></svg>
+        <div class="topic-name">Prejudice &amp; Stereotyping</div>
+        <div class="topic-hint">Assumptions that harm individuals and groups</div>
+      </div>
+
+      <div class="topic-card" data-topic="gender" onclick="selectTopic(this)">
+        <svg class="topic-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M12 12v8m-3-3h6"/></svg>
+        <div class="topic-name">Gender Roles &amp; Expectations</div>
+        <div class="topic-hint">How society defines and limits gender</div>
+      </div>
+
+
+
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-to-step2" onclick="goToStep(2)" disabled>Continue to Step 2 &rarr;</button>
+    </div>
+  </div>
+
+  <!-- PANEL 2: SOURCE PRIMER -->
+  <div class="panel" id="panel-2">
+    <h2 class="panel-heading">Find a source</h2>
+    <p class="panel-intro">Read the framing question, then use the keywords to search one of the two databases below.</p>
+
+    <div class="primer-card" id="primer-display"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goToStep(1)">&larr; Back</button>
+      <button class="btn btn-primary" onclick="goToStep(3)">I found an article &rarr;</button>
+    </div>
+  </div>
+
+  <!-- PANEL 3: EVALUATION -->
+  <div class="panel" id="panel-3">
+    <h2 class="panel-heading">Evaluate your source</h2>
+    <p class="panel-intro">Answer these three questions honestly. The goal is to think carefully before you write.</p>
+
+    <div class="eval-form">
+
+      <div class="eval-question">
+        <div class="eval-q-number">Question 1 of 3</div>
+        <div class="eval-q-text">Who wrote this article, and where was it published?</div>
+        <div class="eval-q-sub">Find the author's name and the name of the news outlet. A staff reporter at an established newspaper is different from an uncredited post on a website you have never heard of. Look for a publication date too: news goes out of date quickly.</div>
+        <textarea class="eval-input" id="q1" placeholder="Example: The article was written by a staff reporter at The Washington Post and published in March 2024. The Post is a major national newspaper with editors who fact-check its reporting..."></textarea>
+        <div style="margin-top:0.7rem;font-size:0.82rem;color:var(--mid)">Does this look like a trustworthy news source?</div>
+        <div class="eval-verdict">
+          <button class="verdict-btn" id="v1-yes"    onclick="setVerdict(1,'yes')">Yes, I trust it</button>
+          <button class="verdict-btn" id="v1-no"     onclick="setVerdict(1,'no')">I am not sure</button>
+          <button class="verdict-btn" id="v1-unsure" onclick="setVerdict(1,'unsure')">I need to look more</button>
+        </div>
+      </div>
+
+      <div class="eval-question">
+        <div class="eval-q-number">Question 2 of 3</div>
+        <div class="eval-q-text">What happened, according to this article, and who says so?</div>
+        <div class="eval-q-sub">News articles build their case through sources: people who were there, officials who made decisions, experts who can explain the situation. Find at least one direct quote or named source in your article. That is your evidence.</div>
+        <textarea class="eval-input" id="q2" placeholder="Example: The article reports that a school district in Atlanta changed its discipline policy after data showed Black students were suspended at three times the rate of white students. A school board member and two researchers are quoted by name..."></textarea>
+        <div style="margin-top:0.7rem;font-size:0.82rem;color:var(--mid)">Does the article name its sources?</div>
+        <div class="eval-verdict">
+          <button class="verdict-btn" id="v2-yes"    onclick="setVerdict(2,'yes')">Yes, clearly</button>
+          <button class="verdict-btn" id="v2-no"     onclick="setVerdict(2,'no')">Not really</button>
+          <button class="verdict-btn" id="v2-unsure" onclick="setVerdict(2,'unsure')">Somewhat</button>
+        </div>
+      </div>
+
+      <div class="eval-question">
+        <div class="eval-q-number">Question 3 of 3</div>
+        <div class="eval-q-text">How does this article connect to the research question?</div>
+        <div class="eval-q-sub">Think about the two parts of the question: how justice has changed over time, and how a person's understanding of justice develops. Where do you see either of those ideas in your article? You can also connect it to a scene or character in <em>TKAM</em> or <em>Dear Martin</em>.</div>
+        <textarea class="eval-input" id="q3" placeholder="Example: The article shows how the idea of restorative justice is newer than most people realize. It also reminds me of how Justyce's understanding of fairness changes after the verdict, because..."></textarea>
+        <div style="margin-top:0.7rem;font-size:0.82rem;color:var(--mid)">Can you connect this article to the research question?</div>
+        <div class="eval-verdict">
+          <button class="verdict-btn" id="v3-yes"    onclick="setVerdict(3,'yes')">Yes, I have one</button>
+          <button class="verdict-btn" id="v3-no"     onclick="setVerdict(3,'no')">Not yet</button>
+          <button class="verdict-btn" id="v3-unsure" onclick="setVerdict(3,'unsure')">Still thinking</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="summary-box hidden" id="summary-box">
+      <div class="summary-label">Your Research Verdict</div>
+      <div class="summary-verdict" id="summary-verdict"></div>
+      <div class="summary-note" id="summary-note"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goToStep(2)">&larr; Back</button>
+      <button class="btn btn-primary" onclick="generateSummary()">See my research verdict</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // All 12 key concepts from the Rasmussen chart, used as searchable keywords.
+  const ALL_KEYWORDS = [
+    "justice", "punitive justice", "restorative justice", "perspective-taking",
+    "discrimination", "moral reasoning", "adolescence", "empathy",
+    "civic participation", "teen courts", "fairness", "bias"
+  ];
+
+  // Priority keywords surface first for each topic; remaining concepts follow.
+  const TOPIC_PRIORITY = {
+    racial:    ["discrimination", "bias", "fairness", "empathy", "moral reasoning"],
+    justice:   ["punitive justice", "restorative justice", "teen courts", "fairness", "bias"],
+    poverty:   ["fairness", "inequality", "civic participation", "adolescence", "discrimination"],
+    power:     ["bias", "discrimination", "moral reasoning", "fairness", "civic participation"],
+    prejudice: ["bias", "discrimination", "perspective-taking", "fairness", "moral reasoning"],
+    gender:    ["discrimination", "bias", "fairness", "moral reasoning", "empathy"],
+
+  };
+
+  function getKeywords(topic) {
+    const priority = TOPIC_PRIORITY[topic];
+    const rest = ALL_KEYWORDS.filter(k => !priority.includes(k));
+    return [...priority, ...rest];
+  }
+
+  const topics = {
+    racial: {
+      body: "Ideas about justice have changed before. Segregation, for instance, once had the law behind it. Both books we've read follow a character who believes the system is fair, then discovers it is not. Atticus defends Tom Robinson knowing the jury will not acquit him. Justyce is handcuffed by a police officer despite having done nothing wrong. Your article should give you an example of that gap between official fairness and lived experience."
+    },
+    justice: {
+      body: "Justice has never meant the same thing across time or place. Societies have moved between punishing wrongdoers and trying to repair the harm they caused, and that debate is still open. In <em>TKAM</em>, the jury delivers a verdict the evidence does not support. In <em>Dear Martin</em>, Justyce watches the system protect the people who harmed him. Your article gives you a current example of that tension."
+    },
+    poverty: {
+      body: "The law tends to treat people the way their money allows. That has been true for a long time; what changes is how honestly a society admits it. In Maycomb, class determines who gets a real defense and who does not. Justyce's scholarship earns him a seat at a better school, but not equal standing in it. Your article connects that pattern to the present."
+    },
+    power: {
+      body: "Power has always been abused. What changes is whether institutions hold people accountable for it. Bob Ewell destroys Tom Robinson because no one in Maycomb will stop him. The officer who handcuffs Justyce faces no consequences. Your article looks at where that accountability fails today, and what people do when it does."
+    },
+    prejudice: {
+      body: "Every era has its own version of the same mistake: judging a person before knowing them. Boo Radley is feared because of rumors. Tom Robinson is convicted on assumption. Justyce is profiled on the street and underestimated at school. Your article shows how that pattern operates in the present, and what it costs the people on the receiving end."
+    },
+    gender: {
+      body: "What people are expected to be based on gender has shifted over time, but the pressure is still real. Scout pushes back on what Maycomb expects of girls throughout the novel. Justyce and Manny navigate a different set of rules: what Black men are supposed to look like, how they are supposed to act, what they are allowed to feel. Your article connects those pressures to life today."
+    },
+  };
+
+  let currentTopic = null;
+  let verdicts = { 1: null, 2: null, 3: null };
+
+  function selectTopic(el) {
+    document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    currentTopic = el.dataset.topic;
+    document.getElementById('btn-to-step2').disabled = false;
+  }
+
+  function goToStep(n) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.step-tab').forEach((t, i) => {
+      t.classList.remove('active', 'done');
+      if (i + 1 < n) t.classList.add('done');
+      if (i + 1 === n) t.classList.add('active');
+    });
+    document.getElementById('panel-' + n).classList.add('active');
+
+    if (n === 2 && currentTopic) {
+      const t = topics[currentTopic];
+      const keywords = getKeywords(currentTopic);
+      const chipsHTML = keywords.map(k => `<span class="keyword-chip">${k}</span>`).join('');
+
+      const dbIcon = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/><path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/></svg>`;
+
+      document.getElementById('primer-display').innerHTML = `
+        <div class="primer-label">Research Question</div>
+        <div class="primer-question">How do ideas about justice change over historical time? How does a person's understanding of justice change over a lifetime?</div>
+        <div class="primer-body">${t.body}</div>
+        <div class="keywords-label">Search keywords</div>
+        <div class="keyword-chips">${chipsHTML}</div>
+        <div class="primer-start">Search these databases:</div>
+        <div class="db-links">
+          <a class="db-link" href="https://research.ebsco.com/c/z7bwvs" target="_blank" rel="noopener">
+            ${dbIcon} Explora Secondary Schools
+          </a>
+          <a class="db-link" href="https://research.ebsco.com/c/t3bsam?db=mih" target="_blank" rel="noopener">
+            ${dbIcon} Middle Search Plus
+          </a>
+        </div>
+      `;
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function setVerdict(q, val) {
+    verdicts[q] = val;
+    ['yes','no','unsure'].forEach(v => {
+      document.getElementById('v' + q + '-' + v).classList.remove('selected-yes','selected-no','selected-unsure');
+    });
+    document.getElementById('v' + q + '-' + val).classList.add('selected-' + val);
+  }
+
+  function generateSummary() {
+    const q1 = document.getElementById('q1').value.trim();
+    const q2 = document.getElementById('q2').value.trim();
+    const q3 = document.getElementById('q3').value.trim();
+
+    const answered = [q1, q2, q3].filter(v => v.length > 10).length;
+    const yesCount = Object.values(verdicts).filter(v => v === 'yes').length;
+    const noCount  = Object.values(verdicts).filter(v => v === 'no').length;
+
+    let verdict, note;
+
+    if (answered < 2) {
+      verdict = "Keep thinking. You are not quite done yet.";
+      note    = "Answer all three questions in your own words before checking your verdict. Even a few sentences helps you think.";
+    } else if (noCount >= 2) {
+      verdict = "You may want to find a different article.";
+      note    = "Your answers suggest the source might not be credible or well-supported enough. Good researchers sometimes reject sources. Try a different search, or ask your teacher or librarian for help.";
+    } else if (yesCount >= 2) {
+      verdict = "This source looks solid. You are ready to write.";
+      note    = "You have found a credible, evidence-based article with a clear connection to the present. Use the evidence you identified in Question 2 in your written response. Quote or paraphrase it, and cite your source in MLA format.";
+    } else {
+      verdict = "A reasonable source. Just be careful about one thing.";
+      note    = "Your source seems usable, but you had some hesitation. Before you write, re-read the article once more and find one concrete piece of evidence: a fact, statistic, or expert quote you can use. If you are still unsure, ask your teacher or librarian.";
+    }
+
+    const box = document.getElementById('summary-box');
+    document.getElementById('summary-verdict').textContent = verdict;
+    document.getElementById('summary-note').textContent    = note;
+    box.classList.remove('hidden');
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+</script>
+</body>
+</html>
